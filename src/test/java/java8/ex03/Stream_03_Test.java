@@ -10,7 +10,9 @@ import org.junit.Test;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
 
@@ -66,7 +68,8 @@ public class Stream_03_Test {
 
         // TODO Construire la map Sexe -> Chaîne représentant les prénoms des clients
         Map<Gender, String> result = customers.stream()
-        		.collect(Collectors.groupingBy(Customer::getGender));
+        		.sorted((Customer c, Customer b) -> c.getFirstname().compareTo(b.getFirstname()))
+        		.collect(Collectors.groupingBy(Customer::getGender,mapping(Customer::getFirstname, Collectors.joining("|")) ));
 
         assertThat(result.get(Gender.F), is("Alexandra|Marion|Sophie"));
         assertThat(result.get(Gender.M), is("Cyril|Johnny"));
